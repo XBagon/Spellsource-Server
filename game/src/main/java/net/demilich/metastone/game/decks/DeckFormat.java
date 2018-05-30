@@ -28,6 +28,30 @@ public class DeckFormat implements Serializable, Cloneable {
 							WITCHWOOD
 					)));
 
+	public static final DeckFormat BLIZZARD_ADVENTURE = new DeckFormat()
+			.withName("Adventure")
+			.withCardSets(
+					Collections.unmodifiableSet(EnumSet.of(
+							BASIC,
+							CLASSIC,
+							REWARD,
+							PROMO,
+							NAXXRAMAS,
+							GOBLINS_VS_GNOMES,
+							BLACKROCK_MOUNTAIN,
+							THE_GRAND_TOURNAMENT,
+							LEAGUE_OF_EXPLORERS,
+							THE_OLD_GODS,
+							ONE_NIGHT_IN_KARAZHAN,
+							MEAN_STREETS_OF_GADGETZAN,
+							JOURNEY_TO_UNGORO,
+							KNIGHTS_OF_THE_FROZEN_THRONE,
+							KOBOLDS_AND_CATACOMBS,
+							WITCHWOOD,
+							HALL_OF_FAME,
+							CardSet.BLIZZARD_ADVENTURE
+					)));
+
 	public static final DeckFormat WILD = new DeckFormat()
 			.withName("Wild")
 			.withCardSets(
@@ -99,9 +123,10 @@ public class DeckFormat implements Serializable, Cloneable {
 							KNIGHTS_OF_THE_FROZEN_THRONE,
 							KOBOLDS_AND_CATACOMBS,
 							WITCHWOOD,
+							BATTLE_FOR_ASHENVALE,
+							SANDS_OF_TIME,
 							HALL_OF_FAME,
-							PROCEDURAL_PREVIEW,
-							CardSet.SPELLSOURCE,
+							CardSet.BLIZZARD_ADVENTURE,
 							CardSet.CUSTOM
 					))
 			);
@@ -126,6 +151,9 @@ public class DeckFormat implements Serializable, Cloneable {
 				return ALL;
 			case "spellsource":
 				return SPELLSOURCE;
+			case "adventure":
+			case "blizzard adventure":
+				return BLIZZARD_ADVENTURE;
 			case "custom":
 			default:
 				return CUSTOM;

@@ -98,7 +98,7 @@ public interface Cards {
 		return CardCatalogue.getRecords().values()
 				.stream()
 				.map(CardCatalogueRecord::getDesc)
-				.filter(cd -> DeckFormat.CUSTOM.isInFormat(cd.getSet())
+				.filter(cd -> DeckFormat.SPELLSOURCE.isInFormat(cd.getSet())
 						&& cd.type != CardType.GROUP
 						&& cd.type != CardType.HERO_POWER
 						&& cd.type != CardType.ENCHANTMENT)
