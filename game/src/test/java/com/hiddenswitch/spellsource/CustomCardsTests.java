@@ -28,7 +28,6 @@ import org.testng.Assert;
 import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -2820,6 +2819,29 @@ public class CustomCardsTests extends TestBase {
 			context.getLogic().performGameAction(player.getId(), player.getHeroPowerZone().get(0).play());
 			assertEquals(player.getHero().getArmor(), 14);
 			assertEquals(player.getMana(), 0);
+		});
+	}
+
+	@Test
+	public void testDrFrankenstein() {
+		runGym((context, player, opponent) -> {
+
+			//Minion bloodfen = playMinionCard(context, player, "minion_bloodfen_raptor");
+			//playCardWithTarget(context, player, "spell_fireball", bloodfen);
+			//Minion juggler = playMinionCard(context, player, "minion_knife_juggler");
+			//playCardWithTarget(context, player, "spell_fireball", juggler);
+			Minion spider = playMinionCard(context, player, "minion_spider_bomb");
+			playCardWithTarget(context, player, "spell_fireball", spider);
+			Minion drake = playMinionCard(context, player, "minion_bone_drake");
+			playCardWithTarget(context, player, "spell_fireball", drake);
+			//Minion archer = playMinionCard(context, player, "minion_elven_archer");
+			//playCardWithTarget(context, player, "spell_fireball", archer);
+
+			playCard(context, player, "minion_dr_frankenstein");
+
+			Card monsterCard = player.getHand().get(0);
+			Minion monster = playMinionCard(context,player,monsterCard);
+			playCardWithTarget(context, player, "spell_assassinate", monster);
 		});
 	}
 }

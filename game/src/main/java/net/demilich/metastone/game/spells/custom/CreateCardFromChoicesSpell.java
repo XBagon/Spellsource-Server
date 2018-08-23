@@ -3,27 +3,24 @@ package net.demilich.metastone.game.spells.custom;
 import co.paralleluniverse.fibers.Suspendable;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import net.demilich.metastone.game.cards.*;
-import net.demilich.metastone.game.spells.desc.filter.EntityFilter;
-import net.demilich.metastone.game.spells.desc.source.CardSource;
-import net.demilich.metastone.game.utils.Attribute;
 import net.demilich.metastone.game.GameContext;
 import net.demilich.metastone.game.Player;
 import net.demilich.metastone.game.actions.DiscoverAction;
+import net.demilich.metastone.game.cards.Card;
+import net.demilich.metastone.game.cards.CardArrayList;
+import net.demilich.metastone.game.cards.CardList;
 import net.demilich.metastone.game.entities.Entity;
-import net.demilich.metastone.game.entities.heroes.HeroClass;
-import net.demilich.metastone.game.entities.minions.Race;
 import net.demilich.metastone.game.spells.NullSpell;
 import net.demilich.metastone.game.spells.Spell;
 import net.demilich.metastone.game.spells.SpellUtils;
 import net.demilich.metastone.game.spells.desc.SpellArg;
 import net.demilich.metastone.game.spells.desc.SpellDesc;
+import net.demilich.metastone.game.spells.desc.filter.EntityFilter;
+import net.demilich.metastone.game.spells.desc.source.CardSource;
+import net.demilich.metastone.game.utils.Attribute;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
-
-import static java.util.stream.Collectors.groupingBy;
 
 public class CreateCardFromChoicesSpell extends Spell {
 	public static SpellDesc create() {
@@ -39,26 +36,30 @@ public class CreateCardFromChoicesSpell extends Spell {
 		Multimap<Integer, Card> sourceCards = ArrayListMultimap.create();
 
 		CardSource cardSource = desc.getCardSource();
-		for (int i = 0; i < howMany; i++) {
-			EntityFilter filter = filters[i];
-			sourceCards.putAll(i, cardSource.getCards(context, source, player).filtered(filter.matcher(context, player, source)));
-		}
+        CardArrayList[] options = new CardArrayList[howMany];
+        int discoverHowMany = desc.getValue(SpellArg.HOW_MANY, context, player, target, source, 3);
+        SpellDesc nullSpell = NullSpell.create();
+        // Eyeroll emoji.
+        nullSpell.put(SpellArg.SPELL, NullSpell.create());
+        boolean exclusive = desc.getBool(SpellArg.EXCLUSIVE);
+        DiscoverAction[] chosen = new DiscoverAction[howMany];
 
-		CardArrayList[] options = new CardArrayList[howMany];
-		int discoverHowMany = desc.getValue(SpellArg.HOW_MANY, context, player, target, source, 3);
 		for (int i = 0; i < howMany; i++) {
+
+			EntityFilter filter = filters[i];
+
+            CardList possibleCards = cardSource.getCards(context, source, player).filtered(filter.matcher(context, player, source));
+            if(exclusive && i > 0) {
+                int local_i = i;
+                possibleCards.removeIf(c -> c.getCardId() == chosen[local_i-1].getCard().getCardId());
+            }
+			sourceCards.putAll(i, possibleCards);
+
 			options[i] = new CardArrayList();
 			Collection<Card> cards = sourceCards.get(i);
 			cards.stream().filter(new RandomSubsetSelector(cards.size(), discoverHowMany, context.getLogic().getRandom()))
 					.forEach(options[i]::addCard);
-		}
 
-		SpellDesc nullSpell = NullSpell.create();
-		// Eyeroll emoji.
-		nullSpell.put(SpellArg.SPELL, NullSpell.create());
-
-		DiscoverAction[] chosen = new DiscoverAction[howMany];
-		for (int i = 0; i < howMany; i++) {
 			chosen[i] = SpellUtils.discoverCard(context, player, nullSpell, options[i]);
 		}
 
