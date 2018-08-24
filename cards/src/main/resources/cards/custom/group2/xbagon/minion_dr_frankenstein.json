@@ -10,7 +10,7 @@
   "battlecry": {
     "condition": {
       "class": "GraveyardCountCondition",
-      "value": 0,
+      "value": 1,
       "operation": "GREATER"
     },
     "targetSelection": "NONE",

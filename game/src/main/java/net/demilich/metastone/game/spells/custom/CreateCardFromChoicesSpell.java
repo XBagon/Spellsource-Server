@@ -51,7 +51,12 @@ public class CreateCardFromChoicesSpell extends Spell {
             CardList possibleCards = cardSource.getCards(context, source, player).filtered(filter.matcher(context, player, source));
             if(exclusive && i > 0) {
                 int local_i = i;
-                possibleCards.removeIf(c -> c.getCardId() == chosen[local_i-1].getCard().getCardId());
+                for (int j = 0; i < possibleCards.size(); j++){
+					if (possibleCards.get(j).getCardId() == chosen[local_i-1].getCard().getCardId()){
+						possibleCards.remove(j);
+						break;
+					}
+				}
             }
 			sourceCards.putAll(i, possibleCards);
 

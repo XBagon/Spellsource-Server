@@ -2825,23 +2825,25 @@ public class CustomCardsTests extends TestBase {
 	@Test
 	public void testDrFrankenstein() {
 		runGym((context, player, opponent) -> {
-
-			//Minion bloodfen = playMinionCard(context, player, "minion_bloodfen_raptor");
-			//playCardWithTarget(context, player, "spell_fireball", bloodfen);
-			//Minion juggler = playMinionCard(context, player, "minion_knife_juggler");
-			//playCardWithTarget(context, player, "spell_fireball", juggler);
 			Minion spider = playMinionCard(context, player, "minion_spider_bomb");
 			playCardWithTarget(context, player, "spell_fireball", spider);
-			Minion drake = playMinionCard(context, player, "minion_bone_drake");
-			playCardWithTarget(context, player, "spell_fireball", drake);
-			//Minion archer = playMinionCard(context, player, "minion_elven_archer");
-			//playCardWithTarget(context, player, "spell_fireball", archer);
+			Minion spider2 = playMinionCard(context, player, "minion_spider_bomb");
+			playCardWithTarget(context, player, "spell_fireball", spider2);
 
 			playCard(context, player, "minion_dr_frankenstein");
 
 			Card monsterCard = player.getHand().get(0);
 			Minion monster = playMinionCard(context,player,monsterCard);
 			playCardWithTarget(context, player, "spell_assassinate", monster);
+		});
+
+		runGym((context, player, opponent) -> {
+			Minion archer = playMinionCard(context, player, "minion_elven_archer");
+			playCardWithTarget(context, player, "spell_fireball", archer);
+
+			playCard(context, player, "minion_dr_frankenstein");
+
+			assertEquals(player.getHand().size(), 0);
 		});
 	}
 }
